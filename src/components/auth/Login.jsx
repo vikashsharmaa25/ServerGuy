@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Input, Button } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -11,9 +11,11 @@ function Login() {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user && user.email === email && user.password === password) {
       alert("Login Successful!");
+      console.log("Redirecting to /user-dashboard");
+      onLogin();
+      navigate("/user-dashboard");
       setEmail("");
       setPassword("");
-      navigate("/user-dashboard");
     } else {
       alert("Invalid email or password!");
     }

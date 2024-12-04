@@ -10,6 +10,11 @@ function App() {
     return !!localStorage.getItem("user");
   });
 
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setIsAuthenticated(false);
+  };
+
   return (
     <div className="bg-[#2e2e2e]">
       <Routes>
@@ -22,7 +27,7 @@ function App() {
           path="/user-dashboard"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <UserDashboard />
+              <UserDashboard onLogout={handleLogout} />
             </ProtectedRoute>
           }
         />
