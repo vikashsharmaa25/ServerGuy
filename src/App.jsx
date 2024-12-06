@@ -10,7 +10,7 @@ function App() {
 
   useEffect(() => {
     const user = localStorage.getItem("user");
-    setIsAuthenticated(!!user);
+    setIsAuthenticated(Boolean(user));
   }, []);
 
   const handleLogout = () => {
@@ -19,7 +19,7 @@ function App() {
   };
 
   return (
-    <div className="bg-[#2e2e2e]">
+    <div className="bg-[#2e2e2e] min-h-screen">
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route

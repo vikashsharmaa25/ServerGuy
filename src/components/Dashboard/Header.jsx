@@ -7,7 +7,6 @@ const Header = ({ onSearch }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    // Sync searchInput with the query parameter in the URL
     const query = searchParams.get("query") || "";
     setSearchInput(query);
   }, [searchParams]);
@@ -16,28 +15,21 @@ const Header = ({ onSearch }) => {
     const value = e.target.value;
     setSearchInput(value);
     onSearch(value);
-
-    // Update the query parameter in the URL
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("query", value);
-    newParams.set("page", "1"); // Reset to page 1 for new search
-    setSearchParams(newParams);
   };
 
   return (
     <header className="bg-orange-500 p-2 flex items-center justify-between text-white">
       <div className="flex items-center space-x-2 max-w-[200px]">
-        <div className="border border-white text-white font-light min-w-9 max-w-9 min-h-9 max-h-9 flex items-center justify-center text-3xl">
+        <div className="border border-white text-white font-light w-9 h-9 flex items-center justify-center text-3xl">
           H
         </div>
-        <div className="text-black font-normal sm:block hidden">
+        <div className="text-black font-normal hidden sm:block">
           <h1 className="text-lg leading-tight whitespace-nowrap">Search</h1>
           <h1 className="text-lg leading-tight whitespace-nowrap">
             Hacker News
           </h1>
         </div>
       </div>
-
       <div className="flex items-center bg-white px-2 w-full max-w-4xl mx-4 relative">
         <FaSearch className="text-orange-400 text-lg mr-2 w-8" />
         <input
@@ -47,7 +39,7 @@ const Header = ({ onSearch }) => {
           onChange={handleSearch}
           className="w-full bg-transparent py-1 text-gray-700 outline-none h-10"
         />
-        <div className="sm:flex hidden space-x-2 items-center absolute right-4">
+        <div className="hidden sm:flex space-x-2 items-center absolute right-4">
           <span className="text-sm hidden md:block text-gray-700">
             Search by
           </span>

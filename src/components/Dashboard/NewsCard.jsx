@@ -12,7 +12,7 @@ const NewsCard = ({ title, author, url, points, num_comments, created_at }) => {
   const safeUrl = url || "#";
 
   return (
-    <div className="text-sm border-b border-gray-200 p-4">
+    <div className="text-sm border-b border-gray-200 px-4">
       <div className="flex items-center gap-2 flex-wrap break-words">
         <h1 className="text-black font-semibold text-md">{safeTitle}</h1>
         <a
