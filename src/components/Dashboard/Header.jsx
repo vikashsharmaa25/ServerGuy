@@ -1,13 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaSearch, FaCog } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
 
 const Header = ({ onSearch }) => {
   const [searchInput, setSearchInput] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    // Sync searchInput with the query parameter in the URL
+    const query = searchParams.get("query") || "";
+    setSearchInput(query);
+  }, [searchParams]);
 
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchInput(value);
-    onSearch(value); // Pass the search input to the parent component
+    onSearch(value);
+
+    // Update the query parameter in the URL
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("query", value);
+    newParams.set("page", "1"); // Reset to page 1 for new search
+    setSearchParams(newParams);
   };
 
   return (

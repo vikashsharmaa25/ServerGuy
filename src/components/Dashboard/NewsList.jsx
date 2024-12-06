@@ -1,13 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NewsCard from "./NewsCard";
+import { useSearchParams } from "react-router-dom";
 
 const NewsList = ({ news }) => {
   const [searchBy, setSearchBy] = useState("title");
   const [sortBy, setSortBy] = useState("popularity");
   const [timeFilter, setTimeFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [sourceFilter, setSourceFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Sync page number from URL search params
+  useEffect(() => {
+    const page = parseInt(searchParams.get("page")) || 1;
+    setCurrentPage(page);
+  }, [searchParams]);
+
+  // Update URL when page changes
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("page", page);
+    setSearchParams(newParams);
+  };
 
   const filteredNews = news
     .filter((item) => {
@@ -16,6 +34,15 @@ const NewsList = ({ news }) => {
       }
       if (searchBy === "author") {
         return item.author?.toLowerCase().includes(searchTerm.toLowerCase());
+      }
+      return true;
+    })
+    .filter((item) => {
+      if (categoryFilter !== "all" && item.category !== categoryFilter) {
+        return false;
+      }
+      if (sourceFilter !== "all" && item.source !== sourceFilter) {
+        return false;
       }
       return true;
     })
@@ -38,10 +65,6 @@ const NewsList = ({ news }) => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
 
   return (
     <div className="bg-gray-100 rounded-lg">
@@ -90,6 +113,40 @@ const NewsList = ({ news }) => {
             <option value="last24h">Last 24 Hours</option>
           </select>
         </div>
+
+        <div className="flex items-center gap-2">
+          <label htmlFor="categoryFilter" className="font-normal text-xs">
+            Category
+          </label>
+          <select
+            id="categoryFilter"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="bg-transparent border border-gray-300 rounded px-1 py-[2px] text-sm"
+          >
+            <option value="all">All Categories</option>
+            <option value="technology">Technology</option>
+            <option value="science">Science</option>
+            <option value="business">Business</option>
+          </select>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <label htmlFor="sourceFilter" className="font-normal text-xs">
+            Source
+          </label>
+          <select
+            id="sourceFilter"
+            value={sourceFilter}
+            onChange={(e) => setSourceFilter(e.target.value)}
+            className="bg-transparent border border-gray-300 rounded px-1 py-[2px] text-sm"
+          >
+            <option value="all">All Sources</option>
+            <option value="bbc">BBC</option>
+            <option value="cnn">CNN</option>
+            <option value="techcrunch">TechCrunch</option>
+          </select>
+        </div>
       </div>
 
       <div className="grid gap-2">
@@ -110,7 +167,6 @@ const NewsList = ({ news }) => {
         )}
       </div>
 
-      {/* Pagination controls */}
       <div className="flex justify-center mt-4 gap-2">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
@@ -119,7 +175,7 @@ const NewsList = ({ news }) => {
             className={`w-7 h-6 rounded border ${
               currentPage === index + 1
                 ? "text-orange-500 border border-orange-500"
-                : "border-gray-400 borde text-gray-800"
+                : "border-gray-400 text-gray-800"
             }`}
           >
             {index + 1}
